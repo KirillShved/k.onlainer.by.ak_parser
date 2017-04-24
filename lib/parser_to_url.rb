@@ -2,6 +2,8 @@ require 'optparse'
 require 'ostruct'
 require 'pry'
 require 'active_support/core_ext/hash'
+require 'nokogiri'
+require 'open-uri'
 
 class ParserToUrl
 
@@ -13,6 +15,3 @@ class ParserToUrl
     puts @options = URL + args.to_query
   end
 end
-
-
-

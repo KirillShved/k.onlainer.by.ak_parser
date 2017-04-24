@@ -1,7 +1,4 @@
-require 'optparse'
-require 'ostruct'
 require_relative 'parser_to_url'
-require 'pry'
 
 class Outparse
   options = {
