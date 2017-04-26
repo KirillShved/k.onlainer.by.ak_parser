@@ -17,7 +17,7 @@ class Outparse
           max: 8500
       },
       only_owner: '',
-      metro: ['red_line', 'blue_line' ],
+      metro: ['red_line', 'blue_line'],
       bounds: {
           lb: {
               lat: 53.6764594639449,
@@ -27,16 +27,17 @@ class Outparse
               lat: 54.12722002680655,
               long: 27.759527091732025
           }
-      }
+      },
+      page: 1
   }
 
   OptionParser.new do |opts|
-    opts.on('-r room,rooms', '--rooms room,1_room,2_rooms', Array,
+    opts.on('-r room,rooms', '--rooms rooms', Array,
             'Enter number of rooms') do |rooms|
       options[:rent_type] = rooms
     end
 
-    opts.on('-m red_line,blue_line', '--metro red_line,blue_line', Array,
+    opts.on('-m red_line', '--metro red_line', Array,
             'Enter line of metro.') do |lines|
       options[:metro] = lines
     end
@@ -55,8 +56,7 @@ class Outparse
       options[:only_owner] = owner
     end
 
-    opts.on('-t TYPE', '--type TYPE', String,
-            'Choose the type of file to save: text or csv.') do |type|
+    opts.on('-t TYPE', '--type TYPE', String) do |type|
       options[:file_type] = type
     end
 
@@ -66,5 +66,5 @@ class Outparse
     end
   end.parse!
 
-  ParserToUrl.new.out_url(options)
+  ParserToUrl.new(options).solutions
 end
