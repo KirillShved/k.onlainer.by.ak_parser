@@ -25,7 +25,7 @@ class ParserToUrl
   def array_urls
     @array_urls ||= begin
       (1..total_pages).map do |page_number|
-        json_to_hash(input_options, page_number)
+        collection_urls(input_options, page_number)
       end.flatten
     end
   end
@@ -40,17 +40,17 @@ class ParserToUrl
     url_base.gsub('page=1', "page=#{page_number}")
   end
 
-  def json_create(params)
+  def json_to_hash(params)
     JSON(Nokogiri::HTML(open(params)))
   end
 
   def total_pages
-    (json_create(input_options)[TOTAL] / ITEMS_LIMIT.to_f).ceil.clamp(1, PAGES_LIMIT)
+    (json_to_hash(input_options)[TOTAL] / ITEMS_LIMIT.to_f).ceil.clamp(1, PAGES_LIMIT)
   end
 
-  def json_to_hash(urls, page_number)
+  def collection_urls(urls, page_number)
     @my_hash ||= begin
-      json_create(url_builder(urls, page_number))[APARTMENTS].map do |link|
+      json_to_hash(url_builder(urls, page_number))[APARTMENTS].map do |link|
         link[URL_PER_PAGE]
       end
     end
