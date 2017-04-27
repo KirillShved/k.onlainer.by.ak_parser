@@ -9,30 +9,25 @@ require 'json'
 class ParserToUrl
 
   URL = 'https://ak.api.onliner.by/search/apartments?'.freeze
-  REGULAR = /https:\\\/\\\/r.onliner.by\\\/ak\\\/apartments\\\/\d+/
-  TOTAL_REGULAR = /"total":(\d+)/
 
   PAGES_LIMIT = 25
   ITEMS_LIMIT = 30
+  TOTAL = "total".freeze
+  APARTMENTS = "apartments".freeze
+  URL_PER_PAGE = "url".freeze
 
-  attr_reader :url, :url_params, :array_urls, :page_count, :my_hash
+  attr_reader :url, :url_params, :array_urls
 
   def initialize(url_params = {})
     @url_params = url_params
-    @array_urls = []
-    @page_count = 0
   end
 
   def array_urls
     @array_urls ||= begin
       (1..total_pages).map do |page_number|
-        Nokogiri::HTML(open(UrlBuilder.new(input_options, page_number).call)).to_s.scan(REGULAR).map do |url|
-          url.gsub('\/', '/')
-        end
+        json_to_hash(input_options, page_number)
       end.flatten
     end
-    binding.pry
-
   end
 
   private
@@ -41,30 +36,23 @@ class ParserToUrl
     @url ||= URL + @url_params.to_query
   end
 
+  def url_builder(url_base, page_number)
+    url_base.gsub('page=1', "page=#{page_number}")
+  end
+
+  def json_create(params)
+    JSON(Nokogiri::HTML(open(params)))
+  end
+
   def total_pages
-    @page_count ||= begin
-      sum = Nokogiri::HTML(open(input_options)).to_s.scan(TOTAL_REGULAR).join.to_i
-      (sum / ITEMS_LIMIT.to_f).ceil.clamp(1, PAGES_LIMIT)
-    end
+    (json_create(input_options)[TOTAL] / ITEMS_LIMIT.to_f).ceil.clamp(1, PAGES_LIMIT)
   end
 
-  class UrlBuilder
-
-    attr_reader :page_number, :url_base
-
-    def initialize(url_base, page_number)
-      @url_base = url_base
-      @page_number = page_number
-    end
-
-    def call
-      url_base.gsub('page=1', "page=#{page_number}")
+  def json_to_hash(urls, page_number)
+    @my_hash ||= begin
+      json_create(url_builder(urls, page_number))[APARTMENTS].map do |link|
+        link[URL_PER_PAGE]
+      end
     end
   end
-
-  # def json_to_hash(urls, page_number)
-  #   @my_hash ||= begin
-  #
-  #   end
-  # end
 end
