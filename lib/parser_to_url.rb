@@ -1,4 +1,3 @@
-require 'pry'
 require_relative 'collector'
 
 class ParserToUrl
@@ -18,7 +17,6 @@ class ParserToUrl
   end
 
   def call
-    array_urls
     CollectorInfo.new(array_urls).call
   end
 
@@ -49,10 +47,8 @@ class ParserToUrl
   end
 
   def collection_urls(url_base, page_number)
-    @my_hash ||= begin
-      json_to_hash(url_builder(url_base, page_number))[APARTMENTS].map do |link|
-        link[URL_PER_PAGE]
-      end
+    json_to_hash(url_builder(url_base, page_number))[APARTMENTS].map do |link|
+      link[URL_PER_PAGE]
     end
   end
 end

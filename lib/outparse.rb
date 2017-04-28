@@ -31,6 +31,10 @@ class Outparse
       page: 1
   }
 
+  file_type = {
+      type: 'json'
+  }
+
   OptionParser.new do |opts|
     opts.on('-r room,rooms', '--rooms rooms', Array,
             'Enter number of rooms') do |rooms|
@@ -57,7 +61,7 @@ class Outparse
     end
 
     opts.on('-t TYPE', '--type TYPE', String) do |type|
-      options[:file_type] = type
+      file_type[:file_type] = type
     end
 
     opts.on_tail('-h', '--help', 'Show this message') do
@@ -66,5 +70,6 @@ class Outparse
     end
   end.parse!
 
+  Repository.type_file(file_type)
   ParserToUrl.new(options).call
 end
