@@ -1,10 +1,5 @@
-require 'optparse'
-require 'ostruct'
 require 'pry'
-require 'active_support/core_ext/hash'
-require 'nokogiri'
-require 'open-uri'
-require 'json'
+require_relative 'collector'
 
 class ParserToUrl
 
@@ -22,6 +17,13 @@ class ParserToUrl
     @url_params = url_params
   end
 
+  def call
+    array_urls
+    CollectorInfo.new(array_urls).call
+  end
+
+  private
+
   def array_urls
     @array_urls ||= begin
       (1..total_pages).map do |page_number|
@@ -29,8 +31,6 @@ class ParserToUrl
       end.flatten
     end
   end
-
-  private
 
   def input_options
     @url ||= URL + @url_params.to_query
@@ -48,9 +48,9 @@ class ParserToUrl
     (json_to_hash(input_options)[TOTAL] / ITEMS_LIMIT.to_f).ceil.clamp(1, PAGES_LIMIT)
   end
 
-  def collection_urls(urls, page_number)
+  def collection_urls(url_base, page_number)
     @my_hash ||= begin
-      json_to_hash(url_builder(urls, page_number))[APARTMENTS].map do |link|
+      json_to_hash(url_builder(url_base, page_number))[APARTMENTS].map do |link|
         link[URL_PER_PAGE]
       end
     end

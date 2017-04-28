@@ -1,5 +1,5 @@
 require '../spec_helper.rb'
-require '../../lib/solution'
+require '../../lib/collector'
 
 RSpec.describe Solution do
   describe '#mul' do

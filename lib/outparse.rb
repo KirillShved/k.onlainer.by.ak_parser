@@ -66,5 +66,5 @@ class Outparse
     end
   end.parse!
 
-  ParserToUrl.new(options).array_urls
+  ParserToUrl.new(options).call
 end
