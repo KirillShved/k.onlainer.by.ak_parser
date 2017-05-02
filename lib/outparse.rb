@@ -1,7 +1,8 @@
-require_relative 'parser_to_url'
+require 'optparse'
+require 'pry'
 
 class Outparse
-  options = {
+  DEFAULT_OPTIONS = {
       rent_type: [
           'room',
           '1_room',
@@ -17,7 +18,10 @@ class Outparse
           max: 8500
       },
       only_owner: '',
-      metro: ['red_line', 'blue_line'],
+      metro: [
+          'red_line',
+          'blue_line'
+      ],
       bounds: {
           lb: {
               lat: 53.6764594639449,
@@ -28,48 +32,73 @@ class Outparse
               long: 27.759527091732025
           }
       },
-      page: 1
-  }
-
-  file_type = {
+      page: 1,
       type: 'json'
-  }
+  }.freeze
 
-  OptionParser.new do |opts|
-    opts.on('-r room,rooms', '--rooms rooms', Array,
-            'Enter number of rooms') do |rooms|
+  attr_reader :options, :parser
+
+  def initialize
+    @options = DEFAULT_OPTIONS.dup
+  end
+
+  def call
+    rooms
+    min_price
+    max_price
+    metro
+    owner
+    type
+    help
+    parser.parse!
+    options
+  end
+
+  def parser
+    @parser ||= OptionParser.new
+  end
+
+  def rooms
+    parser.on('-r room,rooms', '--rooms rooms', Array) do |rooms|
       options[:rent_type] = rooms
     end
+  end
 
-    opts.on('-m red_line', '--metro red_line', Array,
-            'Enter line of metro.') do |lines|
-      options[:metro] = lines
-    end
-
-    opts.on('--price_min 50', Integer,
-            'Enter the minimum price.') do |min_price|
+  def min_price
+    parser.on('--price_min 50', Integer) do |min_price|
       options[:price][:min] = min_price
     end
+  end
 
-    opts.on('--price_max 8500', Integer,
-            'Enter the maximum price.') do |max_price|
+  def max_price
+    parser.on('--price_max 8500', Integer) do |max_price|
       options[:price][:max] = max_price
     end
+  end
 
-    opts.on('-o', '--owner', 'Owner') do |owner|
+  def metro
+    parser.on('-m red_line', '--metro red_line', Array) do |lines|
+      options[:metro] = lines
+    end
+  end
+
+  def owner
+    parser.on('-o', '--owner') do |owner|
       options[:only_owner] = owner
     end
+  end
 
-    opts.on('-t TYPE', '--type TYPE', String) do |type|
-      file_type[:file_type] = type
+  def type
+    parser.on('-t TYPE', '--type TYPE', String,
+              'Enter type of file(JSON or CSV).') do |type|
+      options[:type] = type
     end
+  end
 
-    opts.on_tail('-h', '--help', 'Show this message') do
-      puts opts
+  def help
+    parser.on_tail('-h', '--help') do
+      puts parser
       exit
     end
-  end.parse!
-
-  Repository.type_file(file_type)
-  ParserToUrl.new(options).call
+  end
 end

@@ -1,4 +1,7 @@
-require_relative 'collector'
+require 'active_support/core_ext/hash'
+require 'nokogiri'
+require 'open-uri'
+require 'pry'
 
 class ParserToUrl
 
@@ -17,7 +20,8 @@ class ParserToUrl
   end
 
   def call
-    CollectorInfo.new(array_urls).call
+    puts "Total flats: #{array_urls.length}"
+    array_urls
   end
 
   private
