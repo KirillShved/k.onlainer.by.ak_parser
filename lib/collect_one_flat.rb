@@ -13,83 +13,81 @@ class CollectOneFlat
   APARTMENT_ENABLED_ELEMENTS = 'div.apartment-options__item_lack'.freeze
   APARTMENT_INFO_TEXT = 'div.apartment-info__sub-line'.freeze
   APARTMENT_ADDRESS = 'div.apartment-info__sub-line'.freeze
-  DEFAULT_OPTIONS = {
-      price_byn:  '',
-      price_usd: '',
-      flat: '',
-      owner: '',
-      phone_number: '',
-      owner_name: '',
-      apartment_address: '',
-      enabled_elements: '',
-      disabled_elements: '',
-      apartment_info_text: ''
+  FEATURES_MAPPING = {
+      'Мебель' => :furniture,
+      'Кухонная мебель' => :kitchen,
+      'Плита' => :oven,
+      'Холодильник' => :refrigerator,
+      'Стиральная машина' => :machine,
+      'Телевизор' => :tv,
+      'Интернет' => :internet,
+      'Лоджия или балкон' => :balcony,
+      'Кондиционер' => :air_conditioning
   }.freeze
 
-  attr_reader :options_per_url, :disabled_elements_to_s, :page
+  attr_reader :disabled_elements_to_s, :page
 
   def initialize(url)
     @page = Nokogiri::HTML(open(url))
-    @options_per_url = DEFAULT_OPTIONS.dup
+
   end
 
   def call
-    price_usd
-    flat
-    owner
-    phone_number
-    owner_name
-    apartment_address
-    enabled_elements
-    disabled_elements
-    apartment_info_text
-
-    options_per_url
+    {
+        price_byn:  price_byn,
+        price_usd: price_usd,
+        flat: flat,
+        owner: owner,
+        phone_number: phone_number,
+        owner_name: owner_name,
+        apartment_address: apartment_address,
+        **features,
+        apartment_info_text: apartment_info_text
+    }
   end
 
   private
 
   def price_byn
-    options_per_url[:price_byn] = page.css(PRICE_BYN).text.strip
+    page.css(PRICE_BYN).text.strip
   end
 
   def price_usd
-    options_per_url[:price_usd] = page.css(PRICE_USD).text.strip
+    page.css(PRICE_USD).text.strip
   end
 
   def flat
-    options_per_url[:flat] = page.css(FLAT)[0].text.strip
+    page.css(FLAT)[0].text.strip
   end
 
   def owner
-    options_per_url[:owner] = page.css(OWNER)[1].text.strip
+    page.css(OWNER)[1].text.strip
   end
 
   def phone_number
-    options_per_url[:phone_number] = page.css(PHONE_NUMBER)[0].text.gsub(" ", "").gsub("\n", " ").strip
+    page.css(PHONE_NUMBER)[0].text.gsub(" ", "").gsub("\n", " ").strip
   end
 
   def owner_name
-    options_per_url[:owner_name] = page.css(OWNER_NAME)[2].text.strip
+    page.css(OWNER_NAME)[2].text.strip
   end
 
   def apartment_address
-    options_per_url[:apartment_address] = page.css(APARTMENT_ADDRESS)[5].text.strip
+    page.css(APARTMENT_ADDRESS)[5].text.strip
   end
 
-  def enabled_elements
+  def features
     features_elements = page.css(APARTMENT_ALL_ELEMENTS)
     all_elements = features_elements.map(&:text)
-    enabled_elements_to_s = all_elements - features_elements.css(APARTMENT_ENABLED_ELEMENTS).map(&:text)
-    @disabled_elements_to_s = all_elements - enabled_elements_to_s
-    options_per_url[:enabled_elements] = enabled_elements_to_s.join(', ')
-  end
+    enabled_elements = all_elements - features_elements.css(APARTMENT_ENABLED_ELEMENTS).map(&:text)
 
-  def disabled_elements
-    options_per_url[:disabled_elements] = disabled_elements_to_s.join(', ')
+    FEATURES_MAPPING.inject({}) do |memo, (key, value)|
+      memo[value] = enabled_elements.include?(key)
+      memo
+    end
   end
 
   def apartment_info_text
-    options_per_url[:apartment_info_text] = page.css(APARTMENT_INFO_TEXT)[4].text.gsub("\n", " ").strip
+    page.css(APARTMENT_INFO_TEXT)[4].text.gsub("\n", " ").strip
   end
 end
