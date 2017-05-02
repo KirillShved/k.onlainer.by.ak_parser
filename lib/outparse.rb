@@ -54,6 +54,8 @@ class Outparse
     options
   end
 
+  private
+
   def parser
     @parser ||= OptionParser.new
   end

@@ -17,5 +17,3 @@ class CsvPersist < Base
     end
   end
 end
-
-

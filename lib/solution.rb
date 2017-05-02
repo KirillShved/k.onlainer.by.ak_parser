@@ -9,7 +9,7 @@ class Solution
 
   TYPE_FILE = {
       'json' => JsonPersist,
-      'csv' => CsvPersistgs
+      'csv' => CsvPersist
   }.freeze
 
   attr_reader :type_file, :params
