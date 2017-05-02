@@ -17,7 +17,7 @@ class Collector
 
   def collects
     urls.map do |url|
-      CollectOneFlat.new(url).collect_params
+      CollectOneFlat.new(url).call
     end
   end
 end
