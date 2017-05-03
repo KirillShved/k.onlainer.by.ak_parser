@@ -4,15 +4,15 @@ require 'csv'
 class CsvPersist < Base
 
   TRANSLATIONS = {
-      price_byn:  'Цена: BYN',
-      price_usd: 'Цена: USD',
-      flat: 'Комната',
-      owner: 'ф',
-      phone_number: 'ф',
-      owner_name: 'ф',
-      apartment_address: 'ф',
+      price_byn:  'Цена: BYN:',
+      price_usd: 'Цена: USD:',
+      flat: 'X-Комнатная:',
+      owner: 'Собственник:',
+      phone_number: 'Моб. номер:',
+      owner_name: 'Контактное имя:',
+      apartment_address: 'Адрес:',
       **CollectOneFlat::FEATURES_MAPPING.invert,
-      apartment_info_text: 'ф'
+      apartment_info_text: 'Информация по квартире:'
   }.freeze
 
   attr_reader :data
