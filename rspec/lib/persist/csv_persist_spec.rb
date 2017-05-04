@@ -1,0 +1,1 @@
+require_relative '../../lib/persist/st/csv_persist'

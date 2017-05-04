@@ -22,7 +22,7 @@ class CsvPersist < Base
   end
 
   def persist
-    CSV.open('../storage/output.csv', 'w+') do |csv|
+    CSV.open('../storage/result.csv', 'w+') do |csv|
       csv << TRANSLATIONS.values
       data.each do |h|
         csv << h.values_at(*TRANSLATIONS.keys)

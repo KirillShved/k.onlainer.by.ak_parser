@@ -13,7 +13,7 @@ class JsonPersist < Base
     File.open('../storage/result.json', 'w+').write(hash_to_json)
   end
 
-  private
+  # private
 
   def hash_to_json
     hash.to_json
