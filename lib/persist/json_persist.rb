@@ -3,17 +3,20 @@ require 'json'
 
 class JsonPersist < Base
 
-  attr_reader :hash
+  attr_reader :hash, :path
 
-  def initialize(hash)
+  def initialize(hash, path = '../storage/result.json')
     @hash = hash
+    @path = path
   end
 
   def persist
-    File.open('../storage/result.json', 'w+').write(hash_to_json)
+    file = File.open(path, 'w+')
+    file.write(hash_to_json)
+    file.flush
   end
 
-  # private
+  private
 
   def hash_to_json
     hash.to_json
