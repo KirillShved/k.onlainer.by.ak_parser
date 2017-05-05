@@ -1,11 +1,12 @@
 require_relative 'base'
+require 'pry'
 require 'json'
 
 class JsonPersist < Base
 
   attr_reader :hash, :path
 
-  def initialize(hash, path = '../storage/result.json')
+  def initialize(hash, path = 'storage/result.json')
     @hash = hash
     @path = path
   end

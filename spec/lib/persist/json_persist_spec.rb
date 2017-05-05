@@ -1,6 +1,7 @@
-require_relative '../../../spec/spec_helper'
-require_relative '../../../lib/persist/json_persist'
+require 'spec_helper'
+require 'persist/json_persist'
 require 'json'
+require 'fileutils'
 
 RSpec.describe JsonPersist do
   describe '#persist' do
@@ -10,15 +11,15 @@ RSpec.describe JsonPersist do
     let(:data) { { "a" => "b", "c" => "d" } }
     let(:conversion) { JSON.parse(File.open(path).read) }
 
+    after(:each) do
+      FileUtils.rm_f(path)
+    end
+
     context 'save to file' do
 
-      it 'file exist' do
+      it 'creates file with content' do
         saver.persist
         expect(File).to exist(path)
-      end
-
-      it 'the file has contents' do
-        saver.persist
         expect(conversion).to eq(data)
       end
     end

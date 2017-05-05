@@ -1,4 +1,7 @@
 
 .gitignore
 .idea/
-storage/
+storage/result.csv
+storage/result.json
+storage/test_result.csv
+storage/test_result.json
