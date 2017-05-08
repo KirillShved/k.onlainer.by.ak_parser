@@ -1,5 +1,5 @@
 require_relative 'collector'
-require_relative 'outparse'
+require_relative 'outparser'
 require_relative 'parser_to_url'
 require_relative 'persist/json_persist'
 require_relative 'persist/csv_persist'
@@ -15,7 +15,7 @@ class Solution
   attr_reader :type_file, :params
 
   def initialize
-    @params = Outparse.new.call
+    @params = Outparser.new.call
     @type_file = @params.delete(:type)
   end
 

@@ -14,18 +14,18 @@ class CollectOneFlat
   APARTMENT_INFO_TEXT = 'div.apartment-info__sub-line'.freeze
   APARTMENT_ADDRESS = 'div.apartment-info__sub-line'.freeze
   FEATURES_MAPPING = {
-      'Мебель' => :furniture,
-      'Кухонная мебель' => :kitchen,
-      'Плита' => :oven,
-      'Холодильник' => :refrigerator,
-      'Стиральная машина' => :machine,
-      'Телевизор' => :tv,
-      'Интернет' => :internet,
-      'Лоджия или балкон' => :balcony,
-      'Кондиционер' => :air_conditioning
+    'Мебель' => :furniture,
+    'Кухонная мебель' => :kitchen,
+    'Плита' => :oven,
+    'Холодильник' => :refrigerator,
+    'Стиральная машина' => :machine,
+    'Телевизор' => :tv,
+    'Интернет' => :internet,
+    'Лоджия или балкон' => :balcony,
+    'Кондиционер' => :air_conditioning
   }.freeze
 
-  attr_reader :disabled_elements_to_s, :page
+  attr_reader :page
 
   def initialize(url)
     @page = Nokogiri::HTML(open(url))
@@ -34,15 +34,15 @@ class CollectOneFlat
 
   def call
     {
-        price_byn:  price_byn,
-        price_usd: price_usd,
-        flat: flat,
-        owner: owner,
-        phone_number: phone_number,
-        owner_name: owner_name,
-        apartment_address: apartment_address,
-        **features,
-        apartment_info_text: apartment_info_text
+      price_byn:  price_byn,
+      price_usd: price_usd,
+      flat: flat,
+      owner: owner,
+      phone_number: phone_number,
+      owner_name: owner_name,
+      apartment_address: apartment_address,
+      **features,
+      apartment_info_text: apartment_info_text
     }
   end
 
