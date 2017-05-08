@@ -10,12 +10,6 @@ class Collector
   end
 
   def call
-    collects
-  end
-
-  private
-
-  def collects
     urls.map do |url|
       CollectOneFlat.new(url).call
     end

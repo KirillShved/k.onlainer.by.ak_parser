@@ -7,6 +7,9 @@ RSpec.describe CsvPersist do
     subject(:saver) { described_class.new(data, path) }
 
     let(:path) { 'storage/test_result.csv' }
+    let(:path_fake_file) { 'storage/test_result_v2.csv' }
+    let(:fake_file) { CSV.parse(File.open(path_fake_file).read) }
+    let(:exist_file) { CSV.parse(File.open(path).read) }
     let(:data) {
       [
         {
@@ -20,18 +23,7 @@ RSpec.describe CsvPersist do
         }
       ]
     }
-    let(:conversion) do
-      a = CSV.parse(File.open(path).read)
-      a.shift
-      b = a.flatten
-      c = b.compact
-      i = -1
-
-      result = c.map do |arg|
-        Hash[TRANSLATIONS.keys[i += 1], arg]
-      end.reduce(&:merge)
-      [] << result
-    end
+    let(:conversion) { [] << Hash[TRANSLATIONS.keys.zip exist_file.drop(1).flatten] }
 
     TRANSLATIONS = {
       price_byn:  'Цена: BYN',
@@ -57,6 +49,11 @@ RSpec.describe CsvPersist do
       it 'with content' do
         saver.persist
         expect(conversion).to eq(data)
+      end
+
+      it 'with content v2' do
+        saver.persist
+        expect(fake_file).to eq(exist_file)
       end
     end
   end
