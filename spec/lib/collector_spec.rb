@@ -2,8 +2,8 @@ require 'spec_helper'
 require 'collector'
 
 RSpec.describe Collector do
-  describe 'call' do
-    subject(:collector) { described_class.new(array_urls) }
+  describe '#call' do
+    subject(:collects) { described_class.new(array_urls) }
 
     let(:array_urls) {
       [
@@ -74,11 +74,10 @@ RSpec.describe Collector do
       ]
     }
 
-
     context 'get hashes from page at URLS' do
 
-      it 'get correct hashes' do
-        expect(collector.call).to eq(array_hashes)
+      it 'correct hashes' do
+        expect(collects.call).to eq(array_hashes)
       end
     end
   end

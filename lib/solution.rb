@@ -16,7 +16,7 @@ class Solution
 
   def initialize
     @params = Outparser.new.call
-    @type_file = @params.delete(:type)
+    @type_file = params.delete(:type)
   end
 
   def run

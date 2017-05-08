@@ -1,6 +1,5 @@
 require 'spec_helper'
 require 'persist/csv_persist'
-require 'json'
 
 RSpec.describe CsvPersist do
   describe '#persist' do
