@@ -17,9 +17,9 @@ RSpec.describe CsvPersist do
           price_usd: '50',
           flat: 'X-Комнатная',
           owner: 'Собственник',
-          phone_number: 'Моб. номер',
-          owner_name: 'Контактное имя',
-          apartment_address: 'Адрес'
+          phone_number: '+375 29 111 11 11',
+          owner_name: 'Юра',
+          apartment_address: 'Супер! Адрес'
         }
       ]
     }
@@ -51,7 +51,7 @@ RSpec.describe CsvPersist do
         expect(conversion).to eq(data)
       end
 
-      it 'with content v2' do
+      it 'and persist file eq result' do
         saver.persist
         expect(fake_file).to eq(exist_file)
       end

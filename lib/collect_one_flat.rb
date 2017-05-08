@@ -29,7 +29,6 @@ class CollectOneFlat
 
   def initialize(url)
     @page = Nokogiri::HTML(open(url))
-
   end
 
   def call
