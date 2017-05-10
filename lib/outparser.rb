@@ -1,5 +1,4 @@
 require 'optparse'
-require 'pry'
 
 class Outparser
   DEFAULT_OPTIONS = {

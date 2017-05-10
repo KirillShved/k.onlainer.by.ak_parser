@@ -1,5 +1,4 @@
 require_relative 'collect_one_flat'
-require 'pry'
 
 class Collector
 

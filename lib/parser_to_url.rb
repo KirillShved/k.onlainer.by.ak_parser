@@ -1,7 +1,6 @@
 require 'active_support/core_ext/hash'
 require 'nokogiri'
 require 'net/http'
-require 'pry'
 require_relative 'collection_urls_per_page'
 
 class ParserToUrl
