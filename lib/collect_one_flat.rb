@@ -1,5 +1,5 @@
 require 'nokogiri'
-require 'open-uri'
+require 'net/http'
 
 class CollectOneFlat
 
@@ -28,7 +28,7 @@ class CollectOneFlat
   attr_reader :page
 
   def initialize(url)
-    @page = Nokogiri::HTML(open(url))
+    @page = Nokogiri::HTML(Net::HTTP.get(URI(url)))
   end
 
   def call

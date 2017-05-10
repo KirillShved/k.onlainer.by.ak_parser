@@ -1,5 +1,6 @@
 require 'nokogiri'
-require 'open-uri'
+require 'net/http'
+require 'json'
 
 class CollectionUrlsPerPage
 
@@ -13,9 +14,9 @@ class CollectionUrlsPerPage
     @page_number = page_number
   end
 
-  def run
+  def call
     @array_urls ||= begin
-      JSON(Nokogiri::HTML(open(url_builder)))[APARTMENTS].map do |link|
+      JSON(Nokogiri::HTML(Net::HTTP.get(URI(url_builder))))[APARTMENTS].map do |link|
         link[URL_PER_PAGE]
       end
     end
